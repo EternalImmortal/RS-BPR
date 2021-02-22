@@ -115,22 +115,24 @@ if __name__ == '__main__':
     # for k, v in sorted(vars(args).items()):
     #     print(k, '=', v)
 
+    args = set_env(kind='zf')  # kind=['ml' or 'zf']
     data_dir = os.environ['SM_CHANNEL_EVAL']
     output_dir = os.environ['SM_OUTPUT_DATA_DIR']
-    # test_data_path = 'data-zf/train_data.txt'
-    test_data_path = os.path.join(data_dir, 'test_seq_data.txt')
+    test_data_path = 'data-zf/train_data.txt'
+    # test_data_path = os.path.join(data_dir, 'test_seq_data.txt')
     output_path = os.path.join(output_dir, 'output.csv')
+    # model_dir = os.environ['SM_CHANNEL_MODEL']
+    model_dir = './output/bpr.pt'
+
 
     prepared_data = get_prepared_data(test_data_path)
     train_args = train.get_train_args()
 
-    # model = train.train(train_args, prepared_data)
-    model = load_bpr_model(train_args, prepared_data)
+    model = train.train(train_args, prepared_data)
+    # model = load_bpr_model(train_args, prepared_data)
 
-    args = set_env(kind='zf')  # kind=['ml' or 'zf']
 
-    # model_dir = os.environ['SM_CHANNEL_MODEL']
-    model_dir = './output/bpr.pt'
+    
 
 
     dataset = Dataset(test_data_path, max_len=args.sequence_length)
