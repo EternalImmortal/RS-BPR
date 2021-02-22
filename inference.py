@@ -94,9 +94,9 @@ def load_bpr_model(train_args, dataset):
     user_size, item_size = dataset['user_size'], dataset['item_size']
     train_user_list, test_user_list = dataset['train_user_list'], dataset['test_user_list']
     train_pair = dataset['train_pair']
-    model = train.BPR(user_size, item_size, args.dim, args.weight_decay).to(DEVICE)
-    model.load_state_dict(torch.load(train_args.model))
-    return model
+    test_model = train.BPR(user_size, item_size, args.dim, args.weight_decay).to(DEVICE)
+    test_model.load_state_dict(torch.load(train_args.model))
+    return test_model
 
 
 if __name__ == '__main__':
@@ -121,6 +121,10 @@ if __name__ == '__main__':
     if args.train:
         train.train(train_args)
 
+    print('--------------begin testing!--------------')
+
+    model = load_bpr_model(train_args, prepared_data)
+
     args = set_env(kind='zf')  # kind=['ml' or 'zf']
     # DEVICE = get_device()
 
@@ -140,7 +144,7 @@ if __name__ == '__main__':
 
     tr_dl = torch.utils.data.DataLoader(dataset, 1)
 
-    model = load_bpr_model(train_args, prepared_data)
+
 
     f = open(output_dir, 'w')
 
