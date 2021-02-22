@@ -94,7 +94,7 @@ def load_bpr_model(train_args, dataset):
     user_size, item_size = dataset['user_size'], dataset['item_size']
     train_user_list, test_user_list = dataset['train_user_list'], dataset['test_user_list']
     train_pair = dataset['train_pair']
-    test_model = train.BPR(user_size, item_size, args.dim, args.weight_decay).to(DEVICE)
+    test_model = train.BPR(user_size, item_size, train_args.dim, train_args.weight_decay).to(DEVICE)
     test_model.load_state_dict(torch.load(train_args.model))
     return test_model
 
