@@ -120,8 +120,8 @@ if __name__ == '__main__':
         print(k, '=', v)
     prepared_data = get_prepared_data(args)
     train_args = train.get_train_args()
-    if args.train:
-        train.train(train_args)
+
+    # train.train(train_args)
 
     print('--------------begin testing!--------------')
 
@@ -148,7 +148,7 @@ if __name__ == '__main__':
 
 
 
-    f = open(output_dir, 'w')
+    f = open(output_path, 'w')
 
     model = model.to(DEVICE)
     model.eval()
@@ -156,9 +156,11 @@ if __name__ == '__main__':
     i = 0
     for batch, (user_id, sequence) in enumerate(tr_dl):
         print(batch)
+        
         sequence = sequence[:, 1:].to(DEVICE)
 
-        y_pred, (state_h, state_c) = model(user_id)
+        user_id -= torch.tensor([1])
+        y_pred = model.recommend(user_id)
         # y = int(torch.argmax(y_pred).data)
         # f.write('%s\n ' % y)
         topk = torch.topk(y_pred, 10)[1].data[0].tolist()

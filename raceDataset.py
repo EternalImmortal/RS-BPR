@@ -41,22 +41,22 @@ def main(args):
     record_df = pd.DataFrame(columns=['user', 'item'])
     record_array = []
 
-    # for index, row in df.iterrows():
-    #     item_list = row['sequence'].split(',')
-    #     unique_item_list = np.unique(item_list)
-    #     for item in unique_item_list:
-    #         # record_df = record_df.append(pd.DataFrame([[row['user'], item]], columns=['user', 'item']))
-    #         record_array.append([row['user'], item])
-    #     if index % 1000 == 0:
-    #         print(index)
-    #     if index % 10000 == 0:
-    #         np.save('preprocessed/' + str(index / 10000 + 1) + '.npy', record_array)
-    #         record_array = []
+    for index, row in df.iterrows():
+        item_list = row['sequence'].split(',')
+        unique_item_list = np.unique(item_list)
+        for item in unique_item_list:
+            # record_df = record_df.append(pd.DataFrame([[row['user'], item]], columns=['user', 'item']))
+            record_array.append([row['user'], item])
+        if index % 1000 == 0:
+            print(index)
+        # if index % 10000 == 0:
+        #     np.save('preprocessed/' + str(index / 10000 + 1) + '.npy', record_array)
+        #     record_array = []
 
-    record_array = np.load('preprocessed/1.0.npy')
-    print(record_array.shape)
-    for i in range(1, 6):
-        record_array = np.append(record_array, np.load('preprocessed/' + str(i + 1) + '.0.npy'), axis=0)
+    # record_array = np.load('preprocessed/1.0.npy')
+    # print(record_array.shape)
+    # for i in range(1, 6):
+    #     record_array = np.append(record_array, np.load('preprocessed/' + str(i + 1) + '.0.npy'), axis=0)
 
     record_df = pd.DataFrame(record_array, columns=['user', 'item'], dtype=int)
 
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir',
                         type=str,
-                        default='/Users/WeiJoseph/mystuff/RA-Kim/mini-proj-m1-main/data-zf/train_data.txt',
+                        default='data-zf/train_data.txt',
                         help="File path for raw data")
     parser.add_argument('--output_data',
                         type=str,
