@@ -103,7 +103,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir',
                         type=str,
-                        default='/Users/WeiJoseph/mystuff/RA-Kim/mini-proj-m1-main/data-zf/train_data.txt',
+                        default='./data-zf/train_data.txt',
                         help="File path for raw data")
     parser.add_argument('--test_size',
                         type=float,
