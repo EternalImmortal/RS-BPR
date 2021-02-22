@@ -180,7 +180,7 @@ USE_CUDA = torch.cuda.is_available()
 DEVICE = torch.device("cuda" if USE_CUDA else "cpu")
 
 
-def main(args):
+def train(args):
     # Initialize seed
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -239,10 +239,16 @@ def main(args):
             os.makedirs(dirname, exist_ok=True)
             torch.save(model.state_dict(), args.model)
         idx += 1
+    return model
 
 
-if __name__ == '__main__':
-    # Parse argument
+def model_recommend(test_model, test_data_loader):
+    for u, i, j in test_data_loader:
+        recommendation = test_model.recommend(u)
+
+
+
+def get_train_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data',
                         type=str,
@@ -270,7 +276,7 @@ if __name__ == '__main__':
     # Training
     parser.add_argument('--n_epochs',
                         type=int,
-                        default=500,
+                        default=200,
                         help="Number of epoch during training")
     parser.add_argument('--batch_size',
                         type=int,
@@ -293,4 +299,10 @@ if __name__ == '__main__':
                         default=os.path.join('output', 'bpr.pt'),
                         help="File path for model")
     args = parser.parse_args()
-    main(args)
+    return args
+
+
+if __name__ == '__main__':
+    # Parse argument
+    args = get_train_args()
+    train(args)
