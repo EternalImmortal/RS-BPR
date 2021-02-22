@@ -1,6 +1,6 @@
 runs/
 data/
-preprocessed/
+
 output/
 .vscode/settings.json
 *.pyc
