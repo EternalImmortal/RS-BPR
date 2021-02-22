@@ -11,7 +11,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import IterableDataset, DataLoader, get_worker_info
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 
 
 class TripletUniformPair(IterableDataset):
@@ -180,17 +180,20 @@ USE_CUDA = torch.cuda.is_available()
 DEVICE = torch.device("cuda" if USE_CUDA else "cpu")
 
 
-def train(args):
+def train(args, traning_data=False):
     # Initialize seed
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
 
     # Load preprocess data
-    with open(args.data, 'rb') as f:
-        dataset = pickle.load(f)
-        user_size, item_size = dataset['user_size'], dataset['item_size']
-        train_user_list, test_user_list = dataset['train_user_list'], dataset['test_user_list']
-        train_pair = dataset['train_pair']
+    if traning_data:
+        with open(args.data, 'rb') as f:
+            dataset = pickle.load(f)
+            user_size, item_size = dataset['user_size'], dataset['item_size']
+            train_user_list, test_user_list = dataset['train_user_list'], dataset['test_user_list']
+            train_pair = dataset['train_pair']
+    else:
+        dataset = traning_data
 
     print('train_model.user_size: ' + str(user_size))
     print('train_model.item_size: ' + str(item_size))
@@ -205,7 +208,7 @@ def train(args):
     loader = DataLoader(dataset, batch_size=args.batch_size, num_workers=16)
     model = BPR(user_size, item_size, args.dim, args.weight_decay).to(DEVICE)
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
-    writer = SummaryWriter()
+    # writer = SummaryWriter()
 
     # Training
     smooth_loss = 0
@@ -216,7 +219,7 @@ def train(args):
         loss = model(u, i, j)
         loss.backward()
         optimizer.step()
-        writer.add_scalar('train/loss', loss, idx)
+        # writer.add_scalar('train/loss', loss, idx)
         smooth_loss = smooth_loss * 0.99 + loss * 0.01
         if idx % args.print_every == (args.print_every - 1):
             print('loss: %.4f' % smooth_loss)
@@ -231,12 +234,12 @@ def train(args):
                                                   klist=[1, 5, 10])
             print('P@1: %.4f, P@5: %.4f P@10: %.4f, R@1: %.4f, R@5: %.4f, R@10: %.4f' % (
                 plist[0], plist[1], plist[2], rlist[0], rlist[1], rlist[2]))
-            writer.add_scalars('eval', {'P@1': plist[0],
-                                        'P@5': plist[1],
-                                        'P@10': plist[2]}, idx)
-            writer.add_scalars('eval', {'R@1': rlist[0],
-                                        'R@5': rlist[1],
-                                        'R@10': rlist[2]}, idx)
+            # writer.add_scalars('eval', {'P@1': plist[0],
+            #                             'P@5': plist[1],
+            #                             'P@10': plist[2]}, idx)
+            # writer.add_scalars('eval', {'R@1': rlist[0],
+            #                             'R@5': rlist[1],
+            #                             'R@10': rlist[2]}, idx)
         if idx % args.save_every == (args.save_every - 1):
             dirname = os.path.dirname(os.path.abspath(args.model))
             os.makedirs(dirname, exist_ok=True)

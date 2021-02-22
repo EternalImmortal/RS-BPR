@@ -40,8 +40,8 @@ class RaceDataset(DatasetLoader):
         return train_df
 
 
-def get_prepared_data(args):
-    dataset = RaceDataset(args.data_dir)
+def get_prepared_data(data_path, test_size=0.2):
+    dataset = RaceDataset(data_path)
     df = dataset.load()
     df = df.sort_values(by=['user'], ascending=True).reset_index(drop=True)
 
@@ -69,7 +69,6 @@ def get_prepared_data(args):
     item_size = len(record_df['item'].unique())
     train_user_list, test_user_list = split_train_test(record_df,
                                                        user_size,
-                                                       test_size=args.test_size,
                                                        )
     print('Complete spliting items for training and testing')
 
@@ -102,61 +101,52 @@ def load_bpr_model(train_args, dataset):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--data_dir',
-                        type=str,
-                        default='./data-zf/train_data.txt',
-                        help="File path for raw data")
-    parser.add_argument('--test_size',
-                        type=float,
-                        default=0.2,
-                        help="Proportion for training and testing split")
-    parser.add_argument('--train',
-                        type=bool,
-                        default=False)
-    args = parser.parse_args()
-    # Print arguments
-    for k, v in sorted(vars(args).items()):
-        print(k, '=', v)
-    prepared_data = get_prepared_data(args)
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('--data_dir',
+    #                     type=str,
+    #                     default='./data-zf/train_data.txt',
+    #                     help="File path for raw data")
+    # parser.add_argument('--test_size',
+    #                     type=float,
+    #                     default=0.2,
+    #                     help="Proportion for training and testing split")
+    # args = parser.parse_args()
+    # # Print arguments
+    # for k, v in sorted(vars(args).items()):
+    #     print(k, '=', v)
+
+    data_dir = os.environ['SM_CHANNEL_EVAL']
+    output_dir = os.environ['SM_OUTPUT_DATA_DIR']
+    # test_data_path = 'data-zf/train_data.txt'
+    test_data_path = os.path.join(data_dir, 'test_seq_data.txt')
+    output_path = os.path.join(output_dir, 'output.csv')
+
+    prepared_data = get_prepared_data(test_data_path)
     train_args = train.get_train_args()
 
-    # train.train(train_args)
-
-    print('--------------begin testing!--------------')
-
+    # model = train.train(train_args, prepared_data)
     model = load_bpr_model(train_args, prepared_data)
 
     args = set_env(kind='zf')  # kind=['ml' or 'zf']
-    # DEVICE = get_device()
 
-    data_dir = os.environ['SM_CHANNEL_EVAL']
     # model_dir = os.environ['SM_CHANNEL_MODEL']
-    ##in case only inference
     model_dir = './output/bpr.pt'
-    output_dir = os.environ['SM_OUTPUT_DATA_DIR']
 
-    # data_path = os.path.join(data_dir, 'test_seq_data.txt')
-    data_path = 'data-zf/train_data.txt'
-    output_path = os.path.join(output_dir, 'output.csv')
 
-    dataset = Dataset(data_path, max_len=args.sequence_length)
+    dataset = Dataset(test_data_path, max_len=args.sequence_length)
     # max_item_count = 3706 #for data_ml
     max_item_count = 65427  # for data_zf
-
     tr_dl = torch.utils.data.DataLoader(dataset, 1)
-
-
 
     f = open(output_path, 'w')
 
     model = model.to(DEVICE)
     model.eval()
-
+    print('--------------begin testing!--------------')
     i = 0
     for batch, (user_id, sequence) in enumerate(tr_dl):
         print(batch)
-        
+
         sequence = sequence[:, 1:].to(DEVICE)
 
         user_id -= torch.tensor([1])
