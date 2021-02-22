@@ -238,6 +238,7 @@ def train(args):
             dirname = os.path.dirname(os.path.abspath(args.model))
             os.makedirs(dirname, exist_ok=True)
             torch.save(model.state_dict(), args.model)
+            print('idx = ' + str(idx) + ', saving')
         idx += 1
     return model
 
