@@ -1,7 +1,7 @@
 import torch
 import pandas as pd
 from collections import Counter
-from util import get_device
+from util_origin import get_device
 
 
 # 'train_data.txt'
