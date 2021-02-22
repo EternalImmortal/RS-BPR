@@ -293,7 +293,7 @@ def get_train_args():
                         help="Period for evaluating precision and recall during training")
     parser.add_argument('--save_every',
                         type=int,
-                        default=10000,
+                        default=200,
                         help="Period for saving model during training")
     parser.add_argument('--model',
                         type=str,
