@@ -191,6 +191,9 @@ def train(args):
         user_size, item_size = dataset['user_size'], dataset['item_size']
         train_user_list, test_user_list = dataset['train_user_list'], dataset['test_user_list']
         train_pair = dataset['train_pair']
+
+    print('train_model.user_size: ' + str(user_size))
+    print('train_model.item_size: ' + str(item_size))
     # item_size = 3706
     # user_size = 6040
     # train_user_list.length = 6040
