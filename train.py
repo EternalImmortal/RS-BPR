@@ -187,13 +187,15 @@ def train(args, traning_data=False):
 
     # Load preprocess data
     if traning_data:
+        dataset = traning_data
+    else:
         with open(args.data, 'rb') as f:
             dataset = pickle.load(f)
-            user_size, item_size = dataset['user_size'], dataset['item_size']
-            train_user_list, test_user_list = dataset['train_user_list'], dataset['test_user_list']
-            train_pair = dataset['train_pair']
-    else:
-        dataset = traning_data
+            
+    user_size, item_size = dataset['user_size'], dataset['item_size']
+    train_user_list, test_user_list = dataset['train_user_list'], dataset['test_user_list']
+    train_pair = dataset['train_pair']
+        
 
     print('train_model.user_size: ' + str(user_size))
     print('train_model.item_size: ' + str(item_size))
@@ -283,7 +285,7 @@ def get_train_args():
     # Training
     parser.add_argument('--n_epochs',
                         type=int,
-                        default=200,
+                        default=5,
                         help="Number of epoch during training")
     parser.add_argument('--batch_size',
                         type=int,
