@@ -109,13 +109,17 @@ if __name__ == '__main__':
                         type=float,
                         default=0.2,
                         help="Proportion for training and testing split")
+    parser.add_argument('--train',
+                        type=bool,
+                        default=False)
     args = parser.parse_args()
     # Print arguments
     for k, v in sorted(vars(args).items()):
         print(k, '=', v)
     prepared_data = get_prepared_data(args)
     train_args = train.get_train_args()
-    train.train(train_args)
+    if args.train:
+        train.train(train_args)
 
     args = set_env(kind='zf')  # kind=['ml' or 'zf']
     # DEVICE = get_device()
