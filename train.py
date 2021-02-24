@@ -271,7 +271,7 @@ def get_train_args():
     # Model
     parser.add_argument('--dim',
                         type=int,
-                        default=4,
+                        default=6,
                         help="Dimension for embedding")
     # Optimizer
     parser.add_argument('--lr',
@@ -285,7 +285,7 @@ def get_train_args():
     # Training
     parser.add_argument('--n_epochs',
                         type=int,
-                        default=5,
+                        default=10,
                         help="Number of epoch during training")
     parser.add_argument('--batch_size',
                         type=int,

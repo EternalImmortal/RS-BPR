@@ -119,8 +119,7 @@ if __name__ == '__main__':
     data_dir = os.environ['SM_CHANNEL_EVAL']
     output_dir = os.environ['SM_OUTPUT_DATA_DIR']
     train_data_path = 'data-zf/train_data.txt'
-    validate_data_path = 'data-ml/train_data.txt'
-    test_data_path = os.path.join(data_dir, 'test_seq_data.txt')
+
     output_path = os.path.join(output_dir, 'output.csv')
     # model_dir = os.environ['SM_CHANNEL_MODEL']
     model_dir = './output/bpr.pt'
@@ -131,8 +130,12 @@ if __name__ == '__main__':
     model = train.train(train_args, prepared_data)
     # model = load_bpr_model(train_args, prepared_data)
 
-    validate_dataset = Dataset(validate_data_path, max_len=args.sequence_length)
-    tr_dl = torch.utils.data.DataLoader(validate_dataset, 1)
+    # validate_data_path = 'data-ml/train_data.txt'
+    # validate_dataset = Dataset(validate_data_path, max_len=args.sequence_length)
+    # vl_dl = torch.utils.data.DataLoader(validate_dataset, 1)
+    test_data_path = os.path.join(data_dir, 'test_seq_data.txt')
+    test_dataset = Dataset(test_data_path, max_len=args.sequence_length)
+    test_dl = torch.utils.data.DataLoader(test_dataset, 1)
 
     f = open(output_path, 'w')
 
@@ -140,9 +143,9 @@ if __name__ == '__main__':
     model.eval()
     print('--------------begin testing!--------------')
     i = 0
-    for batch, (user_id, sequence) in enumerate(tr_dl):
-        print(batch)
-        print(user_id)
+    for batch, (user_id, sequence) in enumerate(test_dl):
+        # print(batch)
+        # print(user_id)
         sequence = sequence[:, 1:].to(DEVICE)
 
         user_id -= torch.tensor([1])
@@ -157,6 +160,3 @@ if __name__ == '__main__':
         # if i > 3 : break
 
     f.close()
-
-
-
