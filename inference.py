@@ -118,22 +118,23 @@ if __name__ == '__main__':
     args = set_env(kind='zf')  # kind=['ml' or 'zf']
     data_dir = os.environ['SM_CHANNEL_EVAL']
     output_dir = os.environ['SM_OUTPUT_DATA_DIR']
-    test_data_path = 'data-zf/train_data.txt'
-    # test_data_path = os.path.join(data_dir, 'test_seq_data.txt')
-    output_path = os.path.join(output_dir, 'output_full.csv')
+    train_data_path = 'data-zf/train_data.txt'
+    validate_data_path = 'data-ml/train_data.txt'
+    test_data_path = os.path.join(data_dir, 'test_seq_data.txt')
+    output_path = os.path.join(output_dir, 'output.csv')
     # model_dir = os.environ['SM_CHANNEL_MODEL']
     model_dir = './output/bpr.pt'
 
-    prepared_data = get_prepared_data(test_data_path)
+    prepared_data = get_prepared_data(train_data_path)
     train_args = train.get_train_args()
 
     model = train.train(train_args, prepared_data)
     # model = load_bpr_model(train_args, prepared_data)
 
-    dataset = Dataset(test_data_path, max_len=args.sequence_length)
+    validate_dataset = Dataset(test_data_path, max_len=args.sequence_length)
     # max_item_count = 3706 #for data_ml
     # max_item_count = 65427  # for data_zf
-    tr_dl = torch.utils.data.DataLoader(dataset, 1)
+    tr_dl = torch.utils.data.DataLoader(validate_dataset, 1)
 
     f = open(output_path, 'w')
 
@@ -157,3 +158,6 @@ if __name__ == '__main__':
         # if i > 3 : break
 
     f.close()
+
+
+

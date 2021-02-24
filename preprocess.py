@@ -168,11 +168,11 @@ def create_pair(user_list):
 
 
 def main(args):
-    if args.dataset == 'ml-1m':
+    if args.test_dataset == 'ml-1m':
         df = MovieLens1M(args.data_dir).load()
-    elif args.dataset == 'ml-20m':
+    elif args.test_dataset == 'ml-20m':
         df = MovieLens20M(args.data_dir).load()
-    elif args.dataset == 'amazon-beauty':
+    elif args.test_dataset == 'amazon-beauty':
         df = AmazonBeauty(args.data_dir).load()
     else:
         raise NotImplementedError
