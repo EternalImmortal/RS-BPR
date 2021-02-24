@@ -120,7 +120,7 @@ if __name__ == '__main__':
     output_dir = os.environ['SM_OUTPUT_DATA_DIR']
     test_data_path = 'data-zf/train_data.txt'
     # test_data_path = os.path.join(data_dir, 'test_seq_data.txt')
-    output_path = os.path.join(output_dir, 'output.csv')
+    output_path = os.path.join(output_dir, 'output_full.csv')
     # model_dir = os.environ['SM_CHANNEL_MODEL']
     model_dir = './output/bpr.pt'
 
