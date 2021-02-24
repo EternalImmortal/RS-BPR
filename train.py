@@ -225,28 +225,28 @@ def train(args, traning_data=False):
         smooth_loss = smooth_loss * 0.99 + loss * 0.01
         if idx % args.print_every == (args.print_every - 1):
             print('loss: %.4f' % smooth_loss)
-        if idx % args.eval_every == (args.eval_every - 1):
-            # recommendation = model.recommend(u)
-            # exit(recommendation.shape)
-
-            plist, rlist = precision_and_recall_k(model.W.detach(),
-                                                  model.H.detach(),
-                                                  train_user_list,
-                                                  test_user_list,
-                                                  klist=[1, 5, 10])
-            print('P@1: %.4f, P@5: %.4f P@10: %.4f, R@1: %.4f, R@5: %.4f, R@10: %.4f' % (
-                plist[0], plist[1], plist[2], rlist[0], rlist[1], rlist[2]))
-            # writer.add_scalars('eval', {'P@1': plist[0],
-            #                             'P@5': plist[1],
-            #                             'P@10': plist[2]}, idx)
-            # writer.add_scalars('eval', {'R@1': rlist[0],
-            #                             'R@5': rlist[1],
-            #                             'R@10': rlist[2]}, idx)
-        if idx % args.save_every == (args.save_every - 1):
-            dirname = os.path.dirname(os.path.abspath(args.model))
-            os.makedirs(dirname, exist_ok=True)
-            torch.save(model.state_dict(), args.model)
-            print('idx = ' + str(idx) + ', saving')
+        # if idx % args.eval_every == (args.eval_every - 1):
+        #     # recommendation = model.recommend(u)
+        #     # exit(recommendation.shape)
+        #
+        #     plist, rlist = precision_and_recall_k(model.W.detach(),
+        #                                           model.H.detach(),
+        #                                           train_user_list,
+        #                                           test_user_list,
+        #                                           klist=[1, 5, 10])
+        #     print('P@1: %.4f, P@5: %.4f P@10: %.4f, R@1: %.4f, R@5: %.4f, R@10: %.4f' % (
+        #         plist[0], plist[1], plist[2], rlist[0], rlist[1], rlist[2]))
+        #     # writer.add_scalars('eval', {'P@1': plist[0],
+        #     #                             'P@5': plist[1],
+        #     #                             'P@10': plist[2]}, idx)
+        #     # writer.add_scalars('eval', {'R@1': rlist[0],
+        #     #                             'R@5': rlist[1],
+        #     #                             'R@10': rlist[2]}, idx)
+        # if idx % args.save_every == (args.save_every - 1):
+        #     dirname = os.path.dirname(os.path.abspath(args.model))
+        #     os.makedirs(dirname, exist_ok=True)
+        #     torch.save(model.state_dict(), args.model)
+        #     print('idx = ' + str(idx) + ', saving')
         idx += 1
     return model
 

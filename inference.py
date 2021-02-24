@@ -124,20 +124,15 @@ if __name__ == '__main__':
     # model_dir = os.environ['SM_CHANNEL_MODEL']
     model_dir = './output/bpr.pt'
 
-
     prepared_data = get_prepared_data(test_data_path)
     train_args = train.get_train_args()
 
     model = train.train(train_args, prepared_data)
     # model = load_bpr_model(train_args, prepared_data)
 
-
-    
-
-
     dataset = Dataset(test_data_path, max_len=args.sequence_length)
     # max_item_count = 3706 #for data_ml
-    max_item_count = 65427  # for data_zf
+    # max_item_count = 65427  # for data_zf
     tr_dl = torch.utils.data.DataLoader(dataset, 1)
 
     f = open(output_path, 'w')
@@ -147,11 +142,11 @@ if __name__ == '__main__':
     print('--------------begin testing!--------------')
     i = 0
     for batch, (user_id, sequence) in enumerate(tr_dl):
-        print(batch)
-
+        # print(batch)
         sequence = sequence[:, 1:].to(DEVICE)
 
         user_id -= torch.tensor([1])
+        user_id.to(DEVICE)
         y_pred = model.recommend(user_id)
         # y = int(torch.argmax(y_pred).data)
         # f.write('%s\n ' % y)

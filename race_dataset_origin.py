@@ -64,8 +64,9 @@ class Dataset(torch.utils.data.Dataset):
 
 
 if __name__ == '__main__':
-    dataset = Dataset('../data/train_data.txt', 3)
+    dataset = Dataset('data-zf/train_data.txt', 3)
     # print(dataset.uniq_items)
     print(dataset.count)
+    print(dataset.uniq_items)
     for i in range(10):
         print(i, dataset[i][1].shape)
