@@ -131,7 +131,7 @@ if __name__ == '__main__':
     model = train.train(train_args, prepared_data)
     # model = load_bpr_model(train_args, prepared_data)
 
-    validate_dataset = Dataset(test_data_path, max_len=args.sequence_length)
+    validate_dataset = Dataset(validate_data_path, max_len=args.sequence_length)
     # max_item_count = 3706 #for data_ml
     # max_item_count = 65427  # for data_zf
     tr_dl = torch.utils.data.DataLoader(validate_dataset, 1)
