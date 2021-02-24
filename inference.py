@@ -132,8 +132,6 @@ if __name__ == '__main__':
     # model = load_bpr_model(train_args, prepared_data)
 
     validate_dataset = Dataset(validate_data_path, max_len=args.sequence_length)
-    # max_item_count = 3706 #for data_ml
-    # max_item_count = 65427  # for data_zf
     tr_dl = torch.utils.data.DataLoader(validate_dataset, 1)
 
     f = open(output_path, 'w')
@@ -143,7 +141,8 @@ if __name__ == '__main__':
     print('--------------begin testing!--------------')
     i = 0
     for batch, (user_id, sequence) in enumerate(tr_dl):
-        # print(batch)
+        print(batch)
+        print(user_id)
         sequence = sequence[:, 1:].to(DEVICE)
 
         user_id -= torch.tensor([1])
